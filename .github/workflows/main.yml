@@ -45,7 +45,7 @@ jobs:
           JENKINS_URL="http://54.234.143.11:8080/"
           JOB_NAME="pipeline1"
           USERNAME="nive"
-          TOKEN="113d42a9030690bd0980aa032a5a65e792"
+          TOKEN="11aa75b6a00c61e0a3c20e561bf9dd3ac6"
           
           # Extract inputs from workflow dispatch
           RUN_BASIC_ENV=${{ github.event.inputs.run_basic_env }}
@@ -80,7 +80,7 @@ jobs:
           set -e
           QUEUE_URL="${{ env.queue_url }}"
           USERNAME="nive"
-          TOKEN="113d42a9030690bd0980aa032a5a65e792"
+          TOKEN="11aa75b6a00c61e0a3c20e561bf9dd3ac6"
           echo "Polling Jenkins queue to fetch build number..."
           
           BUILD_NUMBER="null"
@@ -108,7 +108,7 @@ jobs:
           JOB_NAME="pipeline1"
           BUILD_NUMBER="${{ env.build_number }}"
           USERNAME="nive"
-          TOKEN="113d42a9030690bd0980aa032a5a65e792"
+          TOKEN="11aa75b6a00c61e0a3c20e561bf9dd3ac6"
           echo "Checking Jenkins job status..."
           
           STATUS="null"
