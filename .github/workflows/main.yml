@@ -6,7 +6,7 @@ on:
       deployment_server:
         description: "The IP address of the server to deploy to"
         required: true
-        default: "54.234.143.11"
+        default: "54.158.53.154"
       port:
         description: "The port to deploy the application on (between 8000 and 9000)"
         required: true
@@ -16,13 +16,13 @@ on:
         required: true
         default: "main"
       jobs_to_trigger:
-        description: "Comma-separated list of Jenkins jobs to trigger"
+        description: "Comma-separated list of Jenkins jobs to trigger (e.g., job1,job2,job3)"
         required: true
-        default: "Basic Environment Check”
+        default: "project1"  # Default to triggering only "project1" job
 
 jobs:
   trigger-and-check-jenkins-project1:
-    if: contains(github.event.inputs.jobs_to_trigger, 'Basic Environment Check')
+    if: contains(github.event.inputs.jobs_to_trigger, 'project1')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -31,10 +31,10 @@ jobs:
       - name: Trigger project1 Jenkins Job
         run: |
           set -e
-          JOB_NAME="Basic Environment Check"
-          JENKINS_URL="http://54.234.143.11:8080/"
+          JOB_NAME="project1"
+          JENKINS_URL="http://54.158.53.154:8080/"
           USERNAME="nive"
-          TOKEN="113d42a9030690bd0980aa032a5a65e792"
+          TOKEN="117783665ee7fe073649ba7d4885f4729e"
           DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
           PORT="${{ github.event.inputs.port }}"
           BRANCH_NAME="${{ github.event.inputs.branch_name }}"
@@ -54,7 +54,7 @@ jobs:
           echo "queue_url=$QUEUE_URL" >> $GITHUB_ENV
 
   trigger-and-check-jenkins-project2:
-    if: contains(github.event.inputs.jobs_to_trigger, 'File Operations Test')
+    if: contains(github.event.inputs.jobs_to_trigger, 'project2')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -63,10 +63,10 @@ jobs:
       - name: Trigger project2 Jenkins Job
         run: |
           set -e
-          JOB_NAME="File Operations Test"
-          JENKINS_URL="http://54.234.143.11:8080/"
+          JOB_NAME="project2"
+          JENKINS_URL="http://54.158.53.154:8080/"
           USERNAME="nive"
-          TOKEN="113d42a9030690bd0980aa032a5a65e792”
+          TOKEN="117783665ee7fe073649ba7d4885f4729e"
           DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
           PORT="${{ github.event.inputs.port }}"
           BRANCH_NAME="${{ github.event.inputs.branch_name }}"
@@ -86,7 +86,7 @@ jobs:
           echo "queue_url=$QUEUE_URL" >> $GITHUB_ENV
 
   trigger-and-check-jenkins-project3:
-    if: contains(github.event.inputs.jobs_to_trigger, 'Network Connectivity Test')
+    if: contains(github.event.inputs.jobs_to_trigger, 'project3')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -95,10 +95,10 @@ jobs:
       - name: Trigger project3 Jenkins Job
         run: |
           set -e
-          JOB_NAME="Network Connectivity Test"
-          JENKINS_URL="http://54.234.143.11:8080/"
+          JOB_NAME="project3"
+          JENKINS_URL="http://54.158.53.154:8080/"
           USERNAME="nive"
-          TOKEN="113d42a9030690bd0980aa032a5a65e792”
+          TOKEN="117783665ee7fe073649ba7d4885f4729e"
           DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
           PORT="${{ github.event.inputs.port }}"
           BRANCH_NAME="${{ github.event.inputs.branch_name }}"
@@ -118,7 +118,7 @@ jobs:
           echo "queue_url=$QUEUE_URL" >> $GITHUB_ENV
 
   trigger-and-check-jenkins-project4:
-    if: contains(github.event.inputs.jobs_to_trigger, 'Build Simulation')
+    if: contains(github.event.inputs.jobs_to_trigger, 'project4')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -127,10 +127,10 @@ jobs:
       - name: Trigger project4 Jenkins Job
         run: |
           set -e
-          JOB_NAME="Build Simulation"
-          JENKINS_URL="http://54.234.143.11:8080/"
+          JOB_NAME="project4"
+          JENKINS_URL="http://54.158.53.154:8080/"
           USERNAME="nive"
-          TOKEN="113d42a9030690bd0980aa032a5a65e792”
+          TOKEN="117783665ee7fe073649ba7d4885f4729e"
           DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
           PORT="${{ github.event.inputs.port }}"
           BRANCH_NAME="${{ github.event.inputs.branch_name }}"
