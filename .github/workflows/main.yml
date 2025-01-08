@@ -43,7 +43,7 @@ jobs:
         run: |
           set -e
           JENKINS_URL="http://54.234.143.11:8080/"
-          JOB_NAME="project1"
+          JOB_NAME="pipeline1"
           USERNAME="nive"
           TOKEN="113d42a9030690bd0980aa032a5a65e792"
           
@@ -103,7 +103,7 @@ jobs:
         run: |
           set -e
           JENKINS_URL="http://54.234.143.11:8080/"
-          JOB_NAME="project1"
+          JOB_NAME="pipeline1"
           BUILD_NUMBER="${{ env.build_number }}"
           USERNAME="nive"
           TOKEN="113d42a9030690bd0980aa032a5a65e792"
