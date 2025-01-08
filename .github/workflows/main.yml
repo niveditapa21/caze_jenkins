@@ -46,16 +46,23 @@ jobs:
           JOB_NAME="project1"
           USERNAME="nive"
           TOKEN="113d42a9030690bd0980aa032a5a65e792"
-
+          
           # Extract inputs from workflow dispatch
           RUN_BASIC_ENV=${{ github.event.inputs.run_basic_env }}
           RUN_FILE_OPS=${{ github.event.inputs.run_file_ops }}
           RUN_NETWORK_TEST=${{ github.event.inputs.run_network_test }}
           RUN_BUILD_SIM=${{ github.event.inputs.run_build_sim }}
-
+          
           # Trigger Jenkins job with parameters
-          TRIGGER_RESPONSE=$(curl -X POST -u $USERNAME:$TOKEN "$JENKINS_URL/job/$JOB_NAME/buildWithParameters?RUN_BASIC_ENV=$RUN_BASIC_ENV&RUN_FILE_OPS=$RUN_FILE_OPS&RUN_NETWORK_TEST=$RUN_NETWORK_TEST&RUN_BUILD_SIM=$RUN_BUILD_SIM" -i)
-
+          TRIGGER_RESPONSE=$(curl -v -X POST -u $USERNAME:$TOKEN "$JENKINS_URL/job/$JOB_NAME/buildWithParameters?RUN_BASIC_ENV=$RUN_BASIC_ENV&RUN_FILE_OPS=$RUN_FILE_OPS&RUN_NETWORK_TEST=$RUN_NETWORK_TEST&RUN_BUILD_SIM=$RUN_BUILD_SIM" -i)
+          
+          # Check HTTP status code for success (201)
+          HTTP_STATUS=$(echo "$TRIGGER_RESPONSE" | head -n 1 | awk '{print $2}')
+          if [[ "$HTTP_STATUS" != "201" ]]; then
+            echo "Error triggering Jenkins job. HTTP Status: $HTTP_STATUS"
+            exit 1
+          fi
+          
           # Extract queue URL from response
           QUEUE_URL=$(echo "$TRIGGER_RESPONSE" | grep -Fi Location | awk '{print $2}' | tr -d '\r')
           if [ -z "$QUEUE_URL" ]; then
@@ -72,8 +79,8 @@ jobs:
           QUEUE_URL="${{ env.queue_url }}"
           USERNAME="nive"
           TOKEN="113d42a9030690bd0980aa032a5a65e792"
-
           echo "Polling Jenkins queue to fetch build number..."
+          
           BUILD_NUMBER="null"
           for i in {1..30}; do
             BUILD_NUMBER=$(curl -s -u $USERNAME:$TOKEN "${QUEUE_URL}api/json" | jq -r '.executable.number')
@@ -84,11 +91,12 @@ jobs:
             echo "Waiting for build to be scheduled... Attempt: $i"
             sleep 5
           done
-
+          
           if [ "$BUILD_NUMBER" == "null" ]; then
             echo "Failed to retrieve build number after multiple attempts."
             exit 1
           fi
+          
           echo "build_number=$BUILD_NUMBER" >> $GITHUB_ENV
 
       - name: Check Jenkins Job Status
@@ -99,8 +107,8 @@ jobs:
           BUILD_NUMBER="${{ env.build_number }}"
           USERNAME="nive"
           TOKEN="113d42a9030690bd0980aa032a5a65e792"
-
           echo "Checking Jenkins job status..."
+          
           STATUS="null"
           for i in {1..60}; do
             BUILD_INFO=$(curl -s -u $USERNAME:$TOKEN "$JENKINS_URL/job/$JOB_NAME/$BUILD_NUMBER/api/json")
@@ -111,17 +119,18 @@ jobs:
             echo "Waiting for build to complete... Attempt: $i"
             sleep 10
           done
-
+          
           if [ "$STATUS" == "null" ]; then
             echo "Failed to fetch status after multiple attempts."
             exit 1
           fi
-
+          
           echo "Job Status: $STATUS"
+          
           if [ "$STATUS" == "FAILURE" ]; then
             BUILD_LOG=$(curl -s -u $USERNAME:$TOKEN "$JENKINS_URL/job/$JOB_NAME/$BUILD_NUMBER/consoleText" | tail -n 50)
             echo "Build failed. Logs: $BUILD_LOG"
             exit 1
           fi
-
+          
           echo "Build completed successfully!"
