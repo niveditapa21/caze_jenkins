@@ -1,4 +1,4 @@
-name: Trigger and Check parameterized jenkins job
+name: Trigger and Check Jenkins jobs
 
 on:
   workflow_dispatch:
@@ -15,52 +15,146 @@ on:
         description: "The Git branch to build from"
         required: true
         default: "main"
-      jenkins_stages:
-        description: "Comma-separated list of Jenkins stages to run"
+      jobs_to_trigger:
+        description: "Comma-separated list of Jenkins jobs to trigger"
         required: true
-        default: "RUN_BASIC_ENV"
+        default: "Basic Environment Check”
 
 jobs:
-  trigger-and-check-jenkins:
+  trigger-and-check-jenkins-project1:
+    if: contains(github.event.inputs.jobs_to_trigger, 'Basic Environment Check')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Trigger Jenkins Job
+      - name: Trigger project1 Jenkins Job
         run: |
           set -e
-          JOB_NAME="pipeline1"
+          JOB_NAME="Basic Environment Check"
           JENKINS_URL="http://54.234.143.11:8080/"
           USERNAME="nive"
           TOKEN="113d42a9030690bd0980aa032a5a65e792"
           DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
           PORT="${{ github.event.inputs.port }}"
           BRANCH_NAME="${{ github.event.inputs.branch_name }}"
-          STAGES="${{ github.event.inputs.jenkins_stages }}"
+          DEPLOYMENT_SERVER_ENCODED=$(echo $DEPLOYMENT_SERVER | jq -s -R -r @uri)
+          PORT_ENCODED=$(echo $PORT | jq -s -R -r @uri)
+          BRANCH_NAME_ENCODED=$(echo $BRANCH_NAME | jq -s -R -r @uri)
 
-          # Default parameters, disabling all stages
-          PARAMS="RUN_BASIC_ENV=false&RUN_FILE_OPS=false&RUN_NETWORK_TEST=false&RUN_BUILD_SIM=false"
+          TRIGGER_RESPONSE=$(curl -X POST -u $USERNAME:$TOKEN "$JENKINS_URL/job/$JOB_NAME/buildWithParameters?DEPLOYMENT_SERVER=$DEPLOYMENT_SERVER_ENCODED&PORT=$PORT_ENCODED&BRANCH_NAME=$BRANCH_NAME_ENCODED" -i)
+          QUEUE_URL=$(echo "$TRIGGER_RESPONSE" | grep -Fi Location | awk '{print $2}' | tr -d '\r')
 
-          # Enable specified stages from input
-          for STAGE in $(echo $STAGES | tr ',' '\n'); do
-            PARAMS=$(echo $PARAMS | sed "s/${STAGE}=false/${STAGE}=true/")
-          done
-
-          # Debug output
-          echo "Triggering Jenkins Job with parameters: $PARAMS"
-
-          # Trigger Jenkins job via POST request
-          RESPONSE=$(curl -s -w "%{http_code}" -o response.log -X POST -u $USERNAME:$TOKEN \
-            "$JENKINS_URL/job/$JOB_NAME/buildWithParameters?$PARAMS&DEPLOYMENT_SERVER=${DEPLOYMENT_SERVER}&PORT=${PORT}&BRANCH_NAME=${BRANCH_NAME}")
-
-          # Check if the response code is 200 (OK)
-          HTTP_CODE=$(echo $RESPONSE | tail -n 1)
-
-          if [[ "$HTTP_CODE" -ne 200 ]]; then
-            echo "Failed to trigger Jenkins job. HTTP response code: $HTTP_CODE"
-            cat response.log
+          if [ -z "$QUEUE_URL" ]; then
+            echo "Failed to trigger Jenkins job. Queue URL not found."
             exit 1
           fi
 
-          echo "Jenkins job triggered successfully."
+          echo "Triggered Jenkins job. Queue URL: $QUEUE_URL"
+          echo "queue_url=$QUEUE_URL" >> $GITHUB_ENV
+
+  trigger-and-check-jenkins-project2:
+    if: contains(github.event.inputs.jobs_to_trigger, 'File Operations Test')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Trigger project2 Jenkins Job
+        run: |
+          set -e
+          JOB_NAME="File Operations Test"
+          JENKINS_URL="http://54.234.143.11:8080/"
+          USERNAME="nive"
+          TOKEN="113d42a9030690bd0980aa032a5a65e792”
+          DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
+          PORT="${{ github.event.inputs.port }}"
+          BRANCH_NAME="${{ github.event.inputs.branch_name }}"
+          DEPLOYMENT_SERVER_ENCODED=$(echo $DEPLOYMENT_SERVER | jq -s -R -r @uri)
+          PORT_ENCODED=$(echo $PORT | jq -s -R -r @uri)
+          BRANCH_NAME_ENCODED=$(echo $BRANCH_NAME | jq -s -R -r @uri)
+
+          TRIGGER_RESPONSE=$(curl -X POST -u $USERNAME:$TOKEN "$JENKINS_URL/job/$JOB_NAME/buildWithParameters?DEPLOYMENT_SERVER=$DEPLOYMENT_SERVER_ENCODED&PORT=$PORT_ENCODED&BRANCH_NAME=$BRANCH_NAME_ENCODED" -i)
+          QUEUE_URL=$(echo "$TRIGGER_RESPONSE" | grep -Fi Location | awk '{print $2}' | tr -d '\r')
+
+          if [ -z "$QUEUE_URL" ]; then
+            echo "Failed to trigger Jenkins job. Queue URL not found."
+            exit 1
+          fi
+
+          echo "Triggered Jenkins job. Queue URL: $QUEUE_URL"
+          echo "queue_url=$QUEUE_URL" >> $GITHUB_ENV
+
+  trigger-and-check-jenkins-project3:
+    if: contains(github.event.inputs.jobs_to_trigger, 'Network Connectivity Test')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Trigger project3 Jenkins Job
+        run: |
+          set -e
+          JOB_NAME="Network Connectivity Test"
+          JENKINS_URL="http://54.234.143.11:8080/"
+          USERNAME="nive"
+          TOKEN="113d42a9030690bd0980aa032a5a65e792”
+          DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
+          PORT="${{ github.event.inputs.port }}"
+          BRANCH_NAME="${{ github.event.inputs.branch_name }}"
+          DEPLOYMENT_SERVER_ENCODED=$(echo $DEPLOYMENT_SERVER | jq -s -R -r @uri)
+          PORT_ENCODED=$(echo $PORT | jq -s -R -r @uri)
+          BRANCH_NAME_ENCODED=$(echo $BRANCH_NAME | jq -s -R -r @uri)
+
+          TRIGGER_RESPONSE=$(curl -X POST -u $USERNAME:$TOKEN "$JENKINS_URL/job/$JOB_NAME/buildWithParameters?DEPLOYMENT_SERVER=$DEPLOYMENT_SERVER_ENCODED&PORT=$PORT_ENCODED&BRANCH_NAME=$BRANCH_NAME_ENCODED" -i)
+          QUEUE_URL=$(echo "$TRIGGER_RESPONSE" | grep -Fi Location | awk '{print $2}' | tr -d '\r')
+
+          if [ -z "$QUEUE_URL" ]; then
+            echo "Failed to trigger Jenkins job. Queue URL not found."
+            exit 1
+          fi
+
+          echo "Triggered Jenkins job. Queue URL: $QUEUE_URL"
+          echo "queue_url=$QUEUE_URL" >> $GITHUB_ENV
+
+  trigger-and-check-jenkins-project4:
+    if: contains(github.event.inputs.jobs_to_trigger, 'Build Simulation')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Trigger project4 Jenkins Job
+        run: |
+          set -e
+          JOB_NAME="Build Simulation"
+          JENKINS_URL="http://54.234.143.11:8080/"
+          USERNAME="nive"
+          TOKEN="113d42a9030690bd0980aa032a5a65e792”
+          DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
+          PORT="${{ github.event.inputs.port }}"
+          BRANCH_NAME="${{ github.event.inputs.branch_name }}"
+          DEPLOYMENT_SERVER_ENCODED=$(echo $DEPLOYMENT_SERVER | jq -s -R -r @uri)
+          PORT_ENCODED=$(echo $PORT | jq -s -R -r @uri)
+          BRANCH_NAME_ENCODED=$(echo $BRANCH_NAME | jq -s -R -r @uri)
+
+          TRIGGER_RESPONSE=$(curl -X POST -u $USERNAME:$TOKEN "$JENKINS_URL/job/$JOB_NAME/buildWithParameters?DEPLOYMENT_SERVER=$DEPLOYMENT_SERVER_ENCODED&PORT=$PORT_ENCODED&BRANCH_NAME=$BRANCH_NAME_ENCODED" -i)
+          QUEUE_URL=$(echo "$TRIGGER_RESPONSE" | grep -Fi Location | awk '{print $2}' | tr -d '\r')
+
+          if [ -z "$QUEUE_URL" ]; then
+            echo "Failed to trigger Jenkins job. Queue URL not found."
+            exit 1
+          fi
+
+          echo "Triggered Jenkins job. Queue URL: $QUEUE_URL"
+          echo "queue_url=$QUEUE_URL" >> $GITHUB_ENV
+
+  check-jenkins-status:
+    runs-on: ubuntu-latest
+    needs: [trigger-and-check-jenkins-project1, trigger-and-check-jenkins-project2, trigger-and-check-jenkins-project3, trigger-and-check-jenkins-project4]
+    steps:
+      - name: Check Jenkins Jobs Statuses
+        run: |
+          set -e
+          echo "Checking statuses for triggered Jenkins jobs..."
+          # Add your status-checking logic here
