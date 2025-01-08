@@ -18,11 +18,11 @@ on:
       jobs_to_trigger:
         description: "Comma-separated list of Jenkins jobs to trigger (e.g., job1,job2,job3)"
         required: true
-        default: "project1"  # Default to triggering only "project1" job
+        default: "Basic Environment Check"
 
 jobs:
   trigger-and-check-jenkins-project1:
-    if: contains(github.event.inputs.jobs_to_trigger, 'project1')
+    if: contains(github.event.inputs.jobs_to_trigger, 'Basic Environment Check')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -31,7 +31,7 @@ jobs:
       - name: Trigger project1 Jenkins Job
         run: |
           set -e
-          JOB_NAME="project1"
+          JOB_NAME="Basic Environment Check"
           JENKINS_URL="http://54.234.143.11:8080/"
           USERNAME="nive"
           TOKEN="113d42a9030690bd0980aa032a5a65e792"
@@ -54,7 +54,7 @@ jobs:
           echo "queue_url=$QUEUE_URL" >> $GITHUB_ENV
 
   trigger-and-check-jenkins-project2:
-    if: contains(github.event.inputs.jobs_to_trigger, 'project2')
+    if: contains(github.event.inputs.jobs_to_trigger, 'File Operations Test')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -63,7 +63,7 @@ jobs:
       - name: Trigger project2 Jenkins Job
         run: |
           set -e
-          JOB_NAME="project2"
+          JOB_NAME="File Operations Test"
           JENKINS_URL="http://54.234.143.11:8080/"
           USERNAME="nive"
           TOKEN="113d42a9030690bd0980aa032a5a65e792"
@@ -86,7 +86,7 @@ jobs:
           echo "queue_url=$QUEUE_URL" >> $GITHUB_ENV
 
   trigger-and-check-jenkins-project3:
-    if: contains(github.event.inputs.jobs_to_trigger, 'project3')
+    if: contains(github.event.inputs.jobs_to_trigger, 'Network Connectivity Test')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -95,7 +95,7 @@ jobs:
       - name: Trigger project3 Jenkins Job
         run: |
           set -e
-          JOB_NAME="project3"
+          JOB_NAME="Network Connectivity Test"
           JENKINS_URL="http://54.234.143.11:8080/"
           USERNAME="nive"
           TOKEN="113d42a9030690bd0980aa032a5a65e792"
@@ -118,7 +118,7 @@ jobs:
           echo "queue_url=$QUEUE_URL" >> $GITHUB_ENV
 
   trigger-and-check-jenkins-project4:
-    if: contains(github.event.inputs.jobs_to_trigger, 'project4')
+    if: contains(github.event.inputs.jobs_to_trigger, 'Build Simulation')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -127,7 +127,7 @@ jobs:
       - name: Trigger project4 Jenkins Job
         run: |
           set -e
-          JOB_NAME="project4"
+          JOB_NAME="Build Simulation"
           JENKINS_URL="http://54.234.143.11:8080/"
           USERNAME="nive"
           TOKEN="113d42a9030690bd0980aa032a5a65e792"
