@@ -6,7 +6,7 @@ on:
       deployment_server:
         description: "The IP address of the server to deploy to"
         required: true
-        default: "54.158.53.154"
+        default: "54.234.143.11"
       port:
         description: "The port to deploy the application on (between 8000 and 9000)"
         required: true
@@ -42,10 +42,10 @@ jobs:
       - name: Trigger Jenkins Parameterized Job
         run: |
           set -e
-          JENKINS_URL="http://54.158.53.154:8080/"
+          JENKINS_URL="http://54.234.143.11:8080/"
           JOB_NAME="project1"
           USERNAME="nive"
-          TOKEN="117783665ee7fe073649ba7d4885f4729e"
+          TOKEN="113d42a9030690bd0980aa032a5a65e792"
 
           # Extract inputs from workflow dispatch
           RUN_BASIC_ENV=${{ github.event.inputs.run_basic_env }}
@@ -71,7 +71,7 @@ jobs:
           set -e
           QUEUE_URL="${{ env.queue_url }}"
           USERNAME="nive"
-          TOKEN="117783665ee7fe073649ba7d4885f4729e"
+          TOKEN="113d42a9030690bd0980aa032a5a65e792"
 
           echo "Polling Jenkins queue to fetch build number..."
           BUILD_NUMBER="null"
@@ -94,11 +94,11 @@ jobs:
       - name: Check Jenkins Job Status
         run: |
           set -e
-          JENKINS_URL="http://54.158.53.154:8080/"
+          JENKINS_URL="http://54.234.143.11:8080/"
           JOB_NAME="project1"
           BUILD_NUMBER="${{ env.build_number }}"
           USERNAME="nive"
-          TOKEN="117783665ee7fe073649ba7d4885f4729e"
+          TOKEN="113d42a9030690bd0980aa032a5a65e792"
 
           echo "Checking Jenkins job status..."
           STATUS="null"
