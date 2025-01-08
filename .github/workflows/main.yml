@@ -6,7 +6,7 @@ on:
       deployment_server:
         description: "The IP address of the server to deploy to"
         required: true
-        default: "54.158.53.154"
+        default: "54.234.143.11"
       port:
         description: "The port to deploy the application on (between 8000 and 9000)"
         required: true
@@ -32,9 +32,9 @@ jobs:
         run: |
           set -e
           JOB_NAME="project1"
-          JENKINS_URL="http://54.158.53.154:8080/"
+          JENKINS_URL="http://54.234.143.11:8080/"
           USERNAME="nive"
-          TOKEN="117783665ee7fe073649ba7d4885f4729e"
+          TOKEN="113d42a9030690bd0980aa032a5a65e792"
           DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
           PORT="${{ github.event.inputs.port }}"
           BRANCH_NAME="${{ github.event.inputs.branch_name }}"
@@ -64,9 +64,9 @@ jobs:
         run: |
           set -e
           JOB_NAME="project2"
-          JENKINS_URL="http://54.158.53.154:8080/"
+          JENKINS_URL="http://54.234.143.11:8080/"
           USERNAME="nive"
-          TOKEN="117783665ee7fe073649ba7d4885f4729e"
+          TOKEN="113d42a9030690bd0980aa032a5a65e792"
           DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
           PORT="${{ github.event.inputs.port }}"
           BRANCH_NAME="${{ github.event.inputs.branch_name }}"
@@ -96,9 +96,9 @@ jobs:
         run: |
           set -e
           JOB_NAME="project3"
-          JENKINS_URL="http://54.158.53.154:8080/"
+          JENKINS_URL="http://54.234.143.11:8080/"
           USERNAME="nive"
-          TOKEN="117783665ee7fe073649ba7d4885f4729e"
+          TOKEN="113d42a9030690bd0980aa032a5a65e792"
           DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
           PORT="${{ github.event.inputs.port }}"
           BRANCH_NAME="${{ github.event.inputs.branch_name }}"
@@ -128,9 +128,9 @@ jobs:
         run: |
           set -e
           JOB_NAME="project4"
-          JENKINS_URL="http://54.158.53.154:8080/"
+          JENKINS_URL="http://54.234.143.11:8080/"
           USERNAME="nive"
-          TOKEN="117783665ee7fe073649ba7d4885f4729e"
+          TOKEN="113d42a9030690bd0980aa032a5a65e792"
           DEPLOYMENT_SERVER="${{ github.event.inputs.deployment_server }}"
           PORT="${{ github.event.inputs.port }}"
           BRANCH_NAME="${{ github.event.inputs.branch_name }}"
