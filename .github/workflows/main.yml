@@ -18,7 +18,7 @@ on:
       jenkins_stages:
         description: "Comma-separated list of Jenkins stages to run"
         required: true
-        default: "pipeline1"
+        default: "RUN_BASIC_ENV"
 
 jobs:
   trigger-and-check-jenkins:
